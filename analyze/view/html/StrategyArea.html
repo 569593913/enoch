@@ -1,0 +1,280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>stock</title>
+<script src="/files/analyze/view/js/jquery-3.1.1.min.js"></script>
+<script src="/files/analyze/view/js/highstock6.js"></script>
+<script src="/files/analyze/view/js/highcharts-more.js"></script>
+
+<!--<script src="/files/analyze/view/js/indicators.js"></script>-->
+<!--<script src="/files/analyze/view/js/sma.js"></script>-->
+<!--<script src="/files/analyze/view/js/annotations.js"></script>-->
+<script type="text/javascript">
+
+    // create the chart
+    var chart = Highcharts.stockChart('container', {
+            legend: {
+                enabled: true
+            },
+            plotOptions: {
+                 candlestick: {
+//                            color: '#00eba5',
+//                            lineColor: '#2AEBAF',
+//                            color: '#41BEF1',
+//                            lineColor: '#41BEF1',
+//                            color: '#53B987',
+//                            lineColor: '#7CB5EC',
+                            color: '#53B987',
+                            lineColor: '#53B987',
+//                            color: '#AAAAAA',
+//                            lineColor: '#AAAAAA',
+                            upColor:'red',
+                            upLineColor: 'red'
+                        },
+                 column: {
+//                           color: '#53B987'
+                             color: '#434348'
+//                           color: '#7CB5EC'
+                        }
+            },
+            chart: {
+                height: '680px',
+            },
+            rangeSelector: {
+               enabled:false
+            },
+            tooltip: {
+                crosshairs: [true,true],
+                formatter: function () {
+                    if(this.point) {
+                        console.log(this.point)
+                        return "condition:"+this.point.text
+                    }
+                    var preIndex = this.points[0].series.points.indexOf( this.points[0].point)-1;
+                    preIndex = preIndex<0?0:preIndex;
+                    var preClose = this.points[0].series.points[preIndex].close;
+                    var close = this.points[0].point.close;
+                    var open = this.points[0].point.open;
+                    var raise = preClose==0?'-':(((close-preClose)/preClose*100).toFixed(2)+'%');
+                    var ratio = (open==0?'-': ((close-open)/open*100).toFixed(2))+'%';
+                    var earn = typeof this.points[2] =='undefined'?'-':this.points[2].point.y.toFixed(4);
+                    var maEarn = typeof this.points[3] =='undefined'?'-':this.points[3].point.y.toFixed(4);
+                    var kEarn = typeof this.points[4] =='undefined'?'-':this.points[4].point.y.toFixed(4);
+                    var rEarn = typeof this.points[5] =='undefined'?'-':this.points[5].point.y.toFixed(4);
+                    return '<b>' + Highcharts.dateFormat('%Y-%m-%d',this.x) +'</b>'
+                    +'<br>'+'<b>'+'code: '+'</b>' + this.points[0].series.name
+                    +'<br>'+'<b>'+'open: '+'</b>' + open
+                    +'<br>'+'<b>'+'close: '+'</b>' + close
+//                    +'<br>'+'<b>'+'preClose: '+'</b>' + preClose
+                    +'<br>'+'<b>'+'hight: '+'</b>' + this.points[0].point.high
+                    +'<br>'+'<b>'+'low: '+'</b>' + this.points[0].point.low
+                    +'<br>'+'<b>'+'volume: '+'</b>' + this.points[1].point.y
+                    +'<br>'+'<b>'+'ratio: '+'</b>' + ratio
+                    +'<br>'+'<b>'+'raise: '+'</b>' + raise
+                    +'<br>'+'<b>'+'earn: '+'</b>' + earn
+                    +'<br>'+'<b>'+'maEarn: '+'</b>' + maEarn
+                    +'<br>'+'<b>'+'kEarn: '+'</b>' + kEarn
+                    +'<br>'+'<b>'+'rEarn: '+'</b>' + rEarn
+
+                },
+               positioner: function (labelWidth, labelHeight, point) {
+                    var tooltipX, tooltipY;
+                    if (point.plotX + labelWidth + labelWidth > chart.plotWidth) {
+                        tooltipX = point.plotX + chart.plotLeft - labelWidth - labelWidth;
+                    } else {
+                        tooltipX = point.plotX + chart.plotLeft + labelWidth;
+                    }
+                    tooltipY = point.plotY + labelHeight;
+                    return {
+                        x: tooltipX,
+                        y: tooltipY
+                    };
+                },
+//                followPointer: true,
+                split:false,
+                shared: true
+            },
+            title: {
+                text: '_code_'+' Historical'
+             },
+            xAxis: {
+                type: 'datetime',
+                min: _mDate_
+              },
+            yAxis: [{
+                top: '0%',
+                height: '65%',
+                lineWidth: 2,
+                crosshair:{
+                    zIndex: 1000000
+                }
+            },{
+                gridLineWidth: 0,
+                top: '50%',
+                height: '15%',
+                offset: 0,
+                lineWidth: 2
+
+            },{
+                top: '65%',
+                height: '30%',
+                offset: 0,
+                lineWidth: 2
+            }],
+            series: [
+                {
+                    id: 'k',
+                    zIndex: 2,
+                    type: 'candlestick',
+                    name: '_code_',
+                    data: _data_
+                }, {
+                    id: 'Volume',
+                     zIndex: 1,
+                    type: 'column',
+                    name: 'Volume',
+                    data: _volume_,
+                    yAxis: 1
+                }, {
+                    yAxis: 2,
+                    visible: true,
+                    name: "earningsLine",
+                    lineWidth: 2,
+                    data: _earningsLine_,
+                    color: '#00eba5',
+                    step: false,
+                    connectNulls: false,
+                }, {
+                    yAxis: 2,
+                    visible: true,
+                    name: "maEarningsLine",
+                    lineWidth: 2,
+                    data: _maEarningsLine_,
+                    color: '#5777eb',
+                    step: false,
+                    connectNulls: false,
+                }, {
+                    yAxis: 2,
+                    visible: true,
+                    name: "kEarningsLine",
+                    lineWidth: 2,
+                    data: _kEarningsLine_,
+                    color: '#3cafeb',
+                    step: false,
+                    connectNulls: false,
+                }, {
+                    yAxis: 2,
+                    visible: true,
+                    name: "rLine",
+                    lineWidth: 2,
+                    data: _rLine_,
+                    color: '#ec717f',
+                    step: false,
+                    connectNulls: false,
+                },{
+                    name: 'flags',
+                    type: 'flags',
+                    data: _flags_,
+                    lineWidth: 0,
+//                    enableMouseTracking: false,
+                    onSeries: 'k',
+                    style: { // text style
+                        color: 'white',
+                        fontSize: '15px'
+                    },
+                    y: -80,
+                    zIndex: -1000,
+                    fillColor: '#ec717f',
+//                    fillColor: '#7CB5EC',
+                    shape: 'circlepin',
+                    width: 16
+                },{
+                    name: 'maFlags',
+                    visible: false,
+                    type: 'flags',
+                    data: _maFlags_,
+                    lineWidth: 0,
+//                    enableMouseTracking: false,
+                    onSeries: 'k',
+                    style: { // text style
+                        color: 'white',
+                        fontSize: '15px'
+                    },
+                    y: -80,
+                    zIndex: -1000,
+                    fillColor: '#ec717f',
+//                    fillColor: '#7CB5EC',
+                    shape: 'circlepin',
+                    width: 16
+                },{
+                    name: 'trendMergeLine',
+                    data: _trendMergeLine_,
+                    visible: true,
+                    lineWidth: 2,
+                    step: false,
+                    color: '#6e83eb',
+                    connectNulls: false,
+                    zIndex: 2
+                },{
+                    name: 'trendLine',
+                    data: _trendLine_,
+                    visible: false,
+                    lineWidth: 2,
+                    step: false,
+                    color: '#d37dad',
+                    connectNulls: false,
+                    zIndex: 2
+                },{
+                    type: 'scatter',
+                    name: 'trendBig',
+                    findNearestPointBy: 'x',
+                    data: _trendBig_,
+                    visible: false,
+                    lineWidth: 2,
+                    step: false,
+                    color: '#666666',
+                    connectNulls: false,
+                    zIndex: 2
+                },{
+                    name: "MA20",
+                    lineWidth: 1,
+                    visible: false,
+                    data: _line20_,
+//                    color: '#cc6bdb',
+                    color: '#ec717f',
+                    step: false,
+                    connectNulls: false,
+                    tooltip: {
+                        valueDecimals: 2
+                    }
+                },{
+                    name: "MA60",
+                    lineWidth: 1,
+                    visible: true,
+                    data: _line60_,
+                    color: '#2AEBAF',
+//                    color: '#434348',
+                    step: false,
+                    connectNulls: false,
+                    tooltip: {
+                        valueDecimals: 2
+                    }
+                },{
+        		    type: 'arearange',
+                    name: 'areaRange',
+                    visible: true,
+                    color: '#9DC7F1',
+                    step: 'center',
+                    connectNulls: false,
+                     data: _areaRange_
+                    }
+            ]
+    });
+</script>
+</head>
+<body>
+<div id="container" style="height: 700px; min-width: 310px"></div>
+
+</body>
+</html>

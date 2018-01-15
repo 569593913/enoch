@@ -1,0 +1,15 @@
+Index: analyze/view/html/Stock.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- analyze/view/html/Stock.html	(date 1503856485000)
++++ analyze/view/html/Stock.html	(revision )
+@@ -145,5 +145,6 @@
+ </head>
+ <body>
+ <div id="container" style="height: 700px; min-width: 310px"></div>
++
+ </body>
+ </html>
+\ No newline at end of file

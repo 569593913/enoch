@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>strategy</title>
+<script src="/files/analyze/view/js/jquery-3.1.1.min.js"></script>
+<script src="/files/analyze/view/js/highstock.js"></script>
+<!--<script src="/files/analyze/view/js/indicators.js"></script>-->
+<!--<script src="/files/analyze/view/js/sma.js"></script>-->
+<!--<script src="/files/analyze/view/js/annotations.js"></script>-->
+<script type="text/javascript">
+
+    // create the chart
+    var chart = Highcharts.stockChart('container', {
+            legend: {
+                enabled: true
+            },
+            chart: {
+                height: '680px',
+            },
+            rangeSelector: {
+               enabled:false
+            },
+            tooltip: {
+                crosshairs: [true,true],
+                xDateFormat: '%Y-%m-%d',
+                split: true
+            },
+            title: {
+                text: 'win:_win_ lose:_lose_ odds:_odds_'
+             },
+            xAxis: [{
+                type: 'datetime',
+                xDateFormat: '%Y-%m-%d',
+                title: {
+                    text: 'earnings'
+                }
+//                ,
+//                min: _mDate_
+              },{
+
+            }],
+            yAxis: [
+                { // Primary yAxis
+                    labels: {
+                        style: {
+                            color: "#6e83eb"
+                        }
+                    },
+                    title: {
+                        text: 'earnings',
+                        style: {
+                            color: "#6e83eb"
+                        }
+                    },
+                    opposite: true
+
+                }, { // Secondary yAxis
+                    gridLineWidth: 0,
+                    title: {
+                        text: 'candlestick',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    },
+                    labels: {
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    }
+
+                }, { // Tertiary yAxis
+                    gridLineWidth: 0,
+                    top: '85%',
+                    height: '15%',
+                    title: {
+                        text: 'volume',
+                        style: {
+                            color: '#434348'
+                        }
+                    },
+                    labels: {
+                        style: {
+                            color: '#434348'
+                        }
+                    }
+                }, { // Tertiary yAxis
+                    gridLineWidth: 0,
+                    top: '85%',
+                    height: '15%',
+                    title: {
+                        text: 'odds',
+                        style: {
+                            color: '#434348'
+                        }
+                    },
+                    labels: {
+                        style: {
+                            color: '#434348'
+                        }
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: "avg",
+                    showInNavigator: true,
+                    zIndex: 9,
+                    yAxis: 0,
+                    lineWidth: 2,
+                    data: _avgEarningsLine_,
+                    color: '#6e83eb',
+                    step: false,
+                    connectNulls: false,
+                    tooltip: {
+                        valueDecimals: 2
+                    }
+                },{
+                    name: "ma",
+                    showInNavigator: true,
+                    zIndex: 10,
+                    yAxis: 0,
+                    visible: true,
+                    lineWidth: 2,
+                    data: _maEarningsLine_,
+                    color: '#434348',
+                    step: false,
+                    connectNulls: false,
+                    tooltip: {
+                        valueDecimals: 2,
+                        xDateFormat: '%Y-%m-%d'
+                    }
+                },{
+                    name: "kEarningsLine",
+                    showInNavigator: true,
+                    zIndex: 10,
+                    yAxis: 0,
+                    visible: true,
+                    lineWidth: 2,
+                    data: _kEarningsLine_,
+                    color: '#00eba5',
+                    step: false,
+                    connectNulls: false,
+                    tooltip: {
+                        valueDecimals: 2,
+                        xDateFormat: '%Y-%m-%d'
+                    }
+                },{
+                    name: "r",
+                    showInNavigator: true,
+                    zIndex: 10,
+                    yAxis: 0,
+                    visible: true,
+                    lineWidth: 2,
+                    data: _rEarningsLine_,
+                    color: '#9867ec',
+                    step: false,
+                    connectNulls: false,
+                    tooltip: {
+                        valueDecimals: 2,
+                        xDateFormat: '%Y-%m-%d'
+                    }
+                },{
+                    name: "上证K",
+                    showInNavigator: false,
+                    legendIndex: 4,
+                    zIndex: 2,
+                    visible: false,
+                    type: 'candlestick',
+                    yAxis: 1,
+                    data: _data_,
+                    step: false,
+                    connectNulls: false,
+                    tooltip: {
+                        valueDecimals: 2
+                    }
+                },{
+                    name: "上证成交量",
+                    legendIndex: 5,
+                    showInNavigator: false,
+                    visible: false,
+                    zIndex: 1,
+                    type: 'column',
+                    yAxis: 2,
+                    lineWidth: 2,
+                    data: _volume_,
+                    color: '#434348',
+                    step: false,
+                    connectNulls: false,
+                    tooltip: {
+                        valueDecimals: 2
+                    }
+                }
+            ]
+    });
+</script>
+</head>
+<body>
+<div id="container" style="height: 700px; min-width: 310px"></div>
+</body>
+</html>

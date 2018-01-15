@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>strategy</title>
+<script src="/files/analyze/view/js/jquery-3.1.1.min.js"></script>
+<script src="/files/analyze/view/js/highcharts.js"></script>
+<script type="text/javascript">
+
+    // create the chart
+    var chart = Highcharts.highcharts('container', {
+            legend: {
+                enabled: true
+            },
+            chart: {
+                height: '680px',
+            },
+            title: {
+                text: 'strategy'
+             },
+            series: [
+                {
+                    name: "_name_",
+                    yAxis: 0,
+                    lineWidth: 2,
+                    data: _colum_,
+                    color: '#6e83eb',
+                    step: false,
+                    connectNulls: false,
+                }
+            ]
+    });
+</script>
+</head>
+<body>
+<div id="container" style="height: 700px; min-width: 310px"></div>
+</body>
+</html>
