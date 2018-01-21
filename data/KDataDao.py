@@ -5,6 +5,7 @@ from K import *
 from sqlalchemy import create_engine
 import tushare as ts
 import time
+from DBConfig import *
 import threading
 # dbconfig = {
 #     "host":"127.0.0.1",
@@ -17,10 +18,6 @@ import threading
 
 threadlocal = threading.local()
 
-address = "127.0.0.1"
-user = "root"
-password = "root"
-schema = "stock"
 
 def del_tick_data(code,start,end):
     """删除code股票state到end时间的分笔数据"""

@@ -8,6 +8,7 @@ import time
 from Log import *
 import LogDao as logDao
 from datetime import datetime, timedelta
+from DBConfig import *
 
 
 def update_k_data(code,start,end=None):
@@ -18,7 +19,7 @@ def update_k_data(code,start,end=None):
     else:
         df = ts.get_k_data(code, start=start, end=end,retry_count=3)
     kd.del_k_data(start=start, end=end,code=code)
-    engine = create_engine('mysql://root:root@127.0.0.1/stock')
+    engine = create_engine('mysql://%s:%s@%s/%s' % (user, password, address, schema))
     df.to_sql('k_data', engine, if_exists='append', index=False)
     print code+"complete"
 
