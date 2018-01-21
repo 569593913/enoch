@@ -25,7 +25,7 @@ class Selector():
         print "selecting......"
         codes = kd.get_stock_codes()
         for code in codes:
-            list = kd.get_k_day_af(code, "2016-01-01")
+            list = kd.get_k_data(code, "2016-01-01")
             if len(list) < 3:
                 continue
             if self.analyze(list)==True:

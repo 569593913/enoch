@@ -15,9 +15,9 @@ def update_k_data(code,start,end=None):
     """更新一只股票的K线数据"""
     df = None
     if(end==None):
-        df = ts.get_k_data(code, start=start,retry_count=3)
+        df = ts.get_k_data(code,autype='hfq', start=start,retry_count=3)
     else:
-        df = ts.get_k_data(code, start=start, end=end,retry_count=3)
+        df = ts.get_k_data(code,autype='hfq',  start=start, end=end,retry_count=3)
     kd.del_k_data(start=start, end=end,code=code)
     engine = create_engine('mysql://%s:%s@%s/%s' % (user, password, address, schema))
     df.to_sql('k_data', engine, if_exists='append', index=False)
@@ -71,7 +71,7 @@ class KDataUpdateThread (threading.Thread):
         self.begin = begin
         self.end = end
         self.func = func
-        self.cons = ts.get_apis()
+        # self.cons = ts.get_apis()
         self.failure = []
 
     def run(self):
@@ -87,7 +87,8 @@ class KDataUpdateThread (threading.Thread):
                 break;
             flag = -1
             try:
-                self.func(self.cons,code, self.begin, self.end)
+                # self.func(self.cons,code, self.begin, self.end)
+                self.func(code, self.begin, self.end)
                 flag = 1
                 continue
             except Exception as error:
@@ -104,7 +105,8 @@ def update_all_k_data(begin,end=None,market=None,threadCount=3):
         threadCount = 5
     tds = []
     for i in range(threadCount):
-        t = KDataUpdateThread(list,begin,end,update_k_day_af_t)
+        # t = KDataUpdateThread(list,begin,end,update_k_day_af_t)
+        t = KDataUpdateThread(list,begin,end,update_k_data)
         t.start()
         tds.append(t)
     for t in tds:
@@ -114,9 +116,9 @@ def update_all_k_data(begin,end=None,market=None,threadCount=3):
         failure.append(t.failure)
     print "failure:"+str(failure)
 
-def update_k(byear,eyear,threadCount=3,market=None):
+def update_k_year(byear,eyear,threadCount=3,market=None):
     """
-    更新数据
+    按年更新数据
     byear 开始年,整型
     eyear 结束年,整型
     threadCount 线程数
@@ -133,7 +135,8 @@ def update_k(byear,eyear,threadCount=3,market=None):
             continue
         tds = []
         for i in range(threadCount):
-            t = KDataUpdateThread(list,begin,end,update_k_day_af_t)
+            # t = KDataUpdateThread(list,begin,end,update_k_day_af_t)
+            t = KDataUpdateThread(list, begin, end, update_k_data)
             t.start()
             tds.append(t)
         for t in tds:
@@ -166,5 +169,5 @@ def update_auto():
 # df = ts.bar("000002",conn=ts.get_apis(),freq="1min", start_date='2017-01-02',end_date='2017-01-03',factors=['vr','tor'],retry_count=10)
 # print df
 # print 'complete %s second' %  (time.time()-begin)
-update_k(2016,2017,3,'sza');
-update_k(2016,2017,3,'sha');
+update_k_year(2016,2017,3,'sza');
+update_k_year(2016,2017,3,'sha');
