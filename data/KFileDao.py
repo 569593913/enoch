@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import MySQLdb
-import mysql.connector.pooling
+# import mysql.connector.pooling
 import time
 import threading
 import os
+from DBConfig import *
 def updateFromFile(dir,fileName,db):
     """从一个文件里面更新数据"""
     strs = fileName.split("#")
@@ -51,7 +52,7 @@ class UpdateThread (threading.Thread):
 
     def run(self):
         fileName = None
-        db = MySQLdb.connect("127.0.0.1", "root", "root", "stock")
+        db = MySQLdb.connect(address, user, password, schema)
         try:
             while True:
                 if len(self.list)>0:

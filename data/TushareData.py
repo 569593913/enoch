@@ -161,10 +161,10 @@ def update_auto():
 # update_all_k_data("2015-01-01","2016-01-02","sza",5)
 # update_today_all()
 # print ts.get_hist_data('600848','2017-07-01',retry_count=10)
-update_auto()
+# update_auto()
 # begin = time.time()
 # df = ts.bar("000002",conn=ts.get_apis(),freq="1min", start_date='2017-01-02',end_date='2017-01-03',factors=['vr','tor'],retry_count=10)
 # print df
 # print 'complete %s second' %  (time.time()-begin)
-# update_k(2018,2018,2,'sza');
-# update_k(2018,2018,2,'sha');
+update_k(2016,2017,3,'sza');
+update_k(2016,2017,3,'sha');

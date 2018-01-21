@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import MySQLdb
 from Log import *
+from DBConfig import *
 def insert(log):
     """保存或者更新一批K线数据"""
-    db = MySQLdb.connect("127.0.0.1", "root", "root", "stock")
+    db = MySQLdb.connect(address, user, password, schema)
     cursor = db.cursor()
     try:
         sql = "replace into stock.update_log(code,extra,type,flag,update_time,begin_date,end_date) " \
@@ -26,7 +27,7 @@ def getNeedUpdateCode(type,beginDate,endDate,market=None):
     beginDate 开始日期
     endDate 结束日期
     """
-    db = MySQLdb.connect("127.0.0.1", "root", "root", "stock")
+    db = MySQLdb.connect(address, user, password, schema)
     cursor = db.cursor()
     list = []
     try:
