@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import MySQLdb
-import mysql.connector.pooling
+# import mysql.connector.pooling
 from K import *
 from sqlalchemy import create_engine
 import tushare as ts
@@ -191,7 +191,7 @@ def get_update_k_data(code, start, end):
         print "update>>>>>"+code
         df = ts.get_k_data(code, start="1990-01-01", retry_count=5)
         del_k_data(code,"1990-01-01")
-        engine = create_engine('mysql://root:root@127.0.0.1/stock')
+        engine = create_engine('mysql://%s:%s@%s/%s' % (user,password,address,schema))
         df.to_sql('k_data', engine, if_exists='append', index=False)
     list = get_k_data(code, start, end)
     return list

@@ -94,7 +94,7 @@ class KDataUpdateThread (threading.Thread):
                 self.failure.append(code)
             finally:
                 pass
-                # logDao.insert(Log(code, 1, flag, self.begin, self.end))
+                logDao.insert(Log(code, 1, flag, self.begin, self.end))
 
 
 def update_all_k_data(begin,end=None,market=None,threadCount=3):
@@ -126,7 +126,7 @@ def update_k(byear,eyear,threadCount=3,market=None):
     while year >= byear:
         begin = "%s-01-01" % year
         end = "%s-01-05" % (year+1)
-        end = "%s-12-20" % (year )
+        # end = "%s-12-20" % (year )
         list = logDao.getNeedUpdateCode(1,begin,end,market)
         if len(list) < 1:
             continue
