@@ -7,7 +7,7 @@ def insert(log):
     db = MySQLdb.connect(address, user, password, schema)
     cursor = db.cursor()
     try:
-        sql = "replace into stock.update_log(code,extra,type,flag,update_time,begin_date,end_date) " \
+        sql = "replace into update_log(code,extra,type,flag,update_time,begin_date,end_date) " \
               "values('%s','%s',%s,%s,now(),'%s','%s')" \
               % (log.code, log.extra, log.type, log.flag, log.begin_date, log.end_date)
         cursor.execute(sql)
@@ -32,14 +32,14 @@ def getNeedUpdateCode(type,beginDate,endDate,market=None):
     list = []
     try:
         sql2 = None
-        sql1 = "select code from stock.update_log where flag = -1 and type = %s and begin_date = '%s' and end_date = '%s'" % (type,beginDate,endDate)
+        sql1 = "select code from update_log where flag = -1 and type = %s and begin_date = '%s' and end_date = '%s'" % (type,beginDate,endDate)
         if market == None:
-            sql2 = " select code from stock.stock_info i  WHERE NOT EXISTS " \
-                  "(select null from stock.update_log u where " \
+            sql2 = " select code from stock_info i  WHERE NOT EXISTS " \
+                  "(select null from update_log u where " \
                   "u.code = i.code and u.flag = 1 and type = %s and begin_date = '%s' and end_date = '%s')" % (type,beginDate,endDate)
         else:
-            sql2 = " select code from stock.stock_info i  WHERE NOT EXISTS " \
-                   "(select null from stock.update_log u where " \
+            sql2 = " select code from stock_info i  WHERE NOT EXISTS " \
+                   "(select null from update_log u where " \
                    "u.code = i.code and u.flag = 1 and type = %s and begin_date = '%s' and end_date = '%s') and market = '%s' " % (
                    type, beginDate, endDate, market)
         sql = sql1 + " union " + sql2
