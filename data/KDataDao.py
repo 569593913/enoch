@@ -29,7 +29,7 @@ def del_tick_data(code,start,end):
         else:
             cursor.execute("delete from k_data where date>'%s' and date<'%s' and code='%s'" % (start,end,code))
         db.commit()
-    except BaseException as error:
+    except Exception as error:
         print('An exception occurred: {}'.format(error))
         db.rollback()
     finally:
@@ -46,7 +46,7 @@ def del_k_data(code,start,end=None):
             cursor.execute("delete from k_data where date>='%s' and date<='%s' and code='%s'" % (start,end,code))
         db.commit()
     except BaseException as error:
-        print('An exception occurred: {}'.format(error))
+        print('an exception occurred: {}'.format(error))
         db.rollback()
     finally:
         db.close()
@@ -193,14 +193,16 @@ def get_update_k_data(code, start, end):
     list = get_k_data(code, start, end)
     return list
 
-def get_latest_date():
+def get_latest_date(code=None):
     """获取最近的更新时间"""
     db = MySQLdb.connect(address, user, password, schema)
     cursor = db.cursor()
     try:
-        cursor.execute("SELECT max(date) FROM k_data")
+        if code == None:
+            cursor.execute("SELECT max(date) FROM k_data")
+        else:
+            cursor.execute("SELECT max(date) FROM k_data where code = '%s'" % code)
         results = cursor.fetchone()
-        print "last date %s" % results[0]
         return  str(results[0])[0:10]
     except BaseException as error:
         print('An exception occurred: {}'.format(error))

@@ -13,6 +13,7 @@ from DBConfig import *
 
 def update_k_data(code,start,end=None):
     """更新一只股票的K线数据"""
+    begin = time.time()
     df = None
     if(end==None):
         df = ts.get_k_data(code,autype='hfq', start=start,retry_count=3)
@@ -21,7 +22,7 @@ def update_k_data(code,start,end=None):
     kd.del_k_data(start=start, end=end,code=code)
     engine = create_engine('mysql://%s:%s@%s/%s' % (user, password, address, schema))
     df.to_sql('k_data', engine, if_exists='append', index=False)
-    print code+"complete"
+    print "%s complete %s~%s use:%ss" % (code,start,end,time.time()-begin)
 
 def update_k_day_af_t(cons,code,start,end=None):
     """
@@ -65,12 +66,13 @@ def update_today_all():
 class KDataUpdateThread (threading.Thread):
     queueLock = threading.Lock()
 
-    def __init__(self,list,begin,end,func):
+    def __init__(self,list,begin,end,func,log=True):
         threading.Thread.__init__(self)
         self.list = list
         self.begin = begin
         self.end = end
         self.func = func
+        self.log = log
         # self.cons = ts.get_apis()
         self.failure = []
 
@@ -88,7 +90,13 @@ class KDataUpdateThread (threading.Thread):
             flag = -1
             try:
                 # self.func(self.cons,code, self.begin, self.end)
-                self.func(code, self.begin, self.end)
+                begin = self.begin
+                if self.begin == None:
+                    begin = kd.get_latest_date(code)
+                    now = str(datetime.now())[0:10]
+                    if begin > now:
+                        continue
+                self.func(code, begin, self.end)
                 flag = 1
                 continue
             except Exception as error:
@@ -96,17 +104,26 @@ class KDataUpdateThread (threading.Thread):
                 self.failure.append(code)
             finally:
                 pass
-                logDao.insert(Log(code, 1, flag, self.begin, self.end))
+                if self.log == True:
+                    logDao.insert(Log(code, 1, flag, self.begin, self.end))
 
 
-def update_all_k_data(begin,end=None,market=None,threadCount=3):
+def update_period_k_data(begin=None,end=None,market=None,threadCount=3):
+    """
+    更新数据,当begin为None时,
+    :param begin:
+    :param end:
+    :param market:
+    :param threadCount:
+    :return:
+    """
     list = kd.get_stock_codes(market)
     if threadCount==None:
         threadCount = 5
     tds = []
     for i in range(threadCount):
         # t = KDataUpdateThread(list,begin,end,update_k_day_af_t)
-        t = KDataUpdateThread(list,begin,end,update_k_data)
+        t = KDataUpdateThread(list,begin,end,update_k_data,False)
         t.start()
         tds.append(t)
     for t in tds:
@@ -116,7 +133,7 @@ def update_all_k_data(begin,end=None,market=None,threadCount=3):
         failure.append(t.failure)
     print "failure:"+str(failure)
 
-def update_k_year(byear,eyear,threadCount=3,market=None):
+def update_k_year(byear,eyear,threadCount=3,market=None,log=True):
     """
     按年更新数据
     byear 开始年,整型
@@ -132,11 +149,12 @@ def update_k_year(byear,eyear,threadCount=3,market=None):
         # end = "%s-12-20" % (year )
         list = logDao.getNeedUpdateCode(1,begin,end,market)
         if len(list) < 1:
+            year -= 1
             continue
         tds = []
         for i in range(threadCount):
             # t = KDataUpdateThread(list,begin,end,update_k_day_af_t)
-            t = KDataUpdateThread(list, begin, end, update_k_data)
+            t = KDataUpdateThread(list, begin, end, update_k_data,log)
             t.start()
             tds.append(t)
         for t in tds:
@@ -147,27 +165,11 @@ def update_k_year(byear,eyear,threadCount=3,market=None):
         year -= 1
     print "failure:%s %s" % (len(failure),str(failure))
 
-def update_auto():
-    """自动更新缺失的数据"""
-    date = kd.get_latest_date()
-    days = (datetime.now()-datetime.strptime(date,'%Y-%m-%d')).days
-    if days>0:
-        print "update from %s >>>>>>>>>>>>>" % date
-        update_all_k_data(date)
-    else:
-        print "update today>>>>>>>>>>>>"
-        update_today_all()
 
-# print ts.get_tick_data('000001','2005-08-05')
-# print ts.get_k_data('000001','2017-01-09','2017-08-10')
-# update_k_data("000665",'1990-01-01')
-# update_all_k_data("2015-01-01","2016-01-02","sza",5)
-# update_today_all()
-# print ts.get_hist_data('600848','2017-07-01',retry_count=10)
-# update_auto()
 # begin = time.time()
 # df = ts.bar("000002",conn=ts.get_apis(),freq="1min", start_date='2017-01-02',end_date='2017-01-03',factors=['vr','tor'],retry_count=10)
 # print df
 # print 'complete %s second' %  (time.time()-begin)
-update_k_year(2016,2017,3,'sza');
-update_k_year(2016,2017,3,'sha');
+update_k_year(1990,2017,3,'sza',True);
+update_k_year(1990,2017,3,'sha',True);
+# update_period_k_data()
