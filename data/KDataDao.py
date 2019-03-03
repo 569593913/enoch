@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append("../data")
 import MySQLdb
 # import mysql.connector.pooling
-from K import *
+from data.K import *
 from sqlalchemy import create_engine
 import tushare as ts
 import time
-from DBConfig import *
+from data.DBConfig import *
 import threading
 # dbconfig = {
 #     "host":"127.0.0.1",
@@ -141,7 +143,7 @@ def get_k_data(code, start, end=None):
         else:
             cursor.execute("SELECT %s FROM k_data where code='%s' and date>='%s' and date<='%s' order by date" % (feild,code, start, end))
         results = cursor.fetchall()
-        # print '%s fetchall complete %s second' % (code, (time.time() - bg))
+        # print('%s fetchall complete %s second' % (code, (time.time() - bg)))
         l = []
         for row in results:
             k = K(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7])
@@ -170,7 +172,7 @@ def get_k_day_af(code, start, end=None):
         else:
             cursor.execute("SELECT %s FROM k_day_af where code='%s' and date>='%s' and date<='%s' order by date" % (feild,code, start, end))
         results = cursor.fetchall()
-        # print '%s fetchall complete %s second' % (code, (time.time() - bg))
+        # print('%s fetchall complete %s second' % (code, (time.time() - bg)))
         for row in results:
             k = K(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8])
             list.append(k)
@@ -185,7 +187,7 @@ def get_update_k_data(code, start, end):
     """获取股票,如果数据库没有,就下载数据,再获取"""
     list = get_k_data(code, start, end)
     if len(list)<=0:
-        print "update>>>>>"+code
+        print("update>>>>>"+code)
         df = ts.get_k_data(code, start="1990-01-01", retry_count=5)
         del_k_data(code,"1990-01-01")
         engine = create_engine('mysql://%s:%s@%s/%s' % (user,password,address,schema))
@@ -223,7 +225,7 @@ def get_day_k(date):
         cursor.execute(
             "SELECT %s FROM k_day_af where date='%s'" % (feild, date))
         results = cursor.fetchall()
-        # print '%s fetchall complete %s second' % (code, (time.time() - bg))
+        # print('%s fetchall complete %s second' % (code, (time.time() - bg)))
         for row in results:
             k = K(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
             list.append(k)

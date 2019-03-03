@@ -14,7 +14,7 @@ def souhu_k(code,begin,end):
     """
     url = "http://q.stock.sohu.com/hisHq?code=%s&start=%s&end=%s&order=D&period=d" \
           % (code,begin,end)
-    print url
+    print(url)
     r = requests.request('get',url,timeout=10)
     data = json.loads(r.content)[0]['hq']
     for d in data:
@@ -27,7 +27,7 @@ def souhu_k(code,begin,end):
         k.high = float(d[6])
         k.volume = float(d[7])
         kd.update_k(k)
-    print 'complete code:%s,begin:%s,end:%s' %(code,begin,end)
+    print('complete code:%s,begin:%s,end:%s' %(code,begin,end))
 
 def update_by_souhu_year(code='zs_000001',begin=19900101,end=20171001):
     """

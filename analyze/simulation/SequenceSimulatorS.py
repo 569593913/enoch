@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from Trader import *
+from .Trader import *
 import  data.KDataDao as kd
 import operator
-import thread
+# import thread
 import copy
 from threading import Thread,Lock
 import time
@@ -57,7 +57,7 @@ class SequenceSimulatorS:
         codes = kd.get_stock_codes(market)
         queueLock = Lock()
         def threadMethod(name):
-            print "%s begin run" % name
+            print("%s begin run" % name)
             while True:
                 code = None
                 try:
@@ -67,24 +67,24 @@ class SequenceSimulatorS:
                     code = codes.pop()
                 finally:
                     queueLock.release()
-                # print "%s begin run %s left:%s" % (name,code,len(codes))
+                # print("%s begin run %s left:%s" % (name,code,len(codes)))
                 trader = Trader(self.trader.original)
                 self.traderDic[code] = trader
                 # 获取股票数据
                 # bg = time.time()
                 # list = kd.get_k_day_af(code, begin, end)
                 list = kd.get_k_data(code, begin, end)
-                # print '%s complete %s second %s' % (code, (time.time() - bg),len(list))
+                # print('%s complete %s second %s' % (code, (time.time() - bg),len(list)))
                 if len(list) < 10:
-                    # print '%s begin:%s,end:%s 没有测试数据' % (code, begin, end)
+                    # print('%s begin:%s,end:%s 没有测试数据' % (code, begin, end))
                     continue
                 i = 0
-                sequenceStrategy.init(trader)
+                sequenceStrategy.init(trader,list)
                 for k in list:
                     sequenceStrategy.decide(k)
                     trader.fresh(k.date, {code:k.close})
 
-            print "%s end run" % name
+            print("%s end run" % name)
         threads = []
         for i in range(threadCount):
             t = Thread(target=threadMethod,args=('thread-%s' % i,))

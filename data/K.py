@@ -3,11 +3,12 @@ class K:
     """
     attributes:
     date,open,close,high,low,volume,code
+    pct_chg 当天涨幅
     amount 成交额
     tor 换手率turnover
     vr 量比
     """
-    def __init__(self,date=0,open=0,close=0,high=0,low=0,volume=0,code='',amount=0,tor=0,vr=0):
+    def __init__(self,date=0,open=0,close=0,high=0,low=0,volume=0,code='',amount=0,tor=0,vr=0,pct_chg=0):
         self.date = date
         self.open = open
         self.close = close
@@ -18,6 +19,7 @@ class K:
         self.tor = tor
         self.amount = amount
         self.vr = vr
+        self.pct_chg = pct_chg
 
     def isUp(self):
         """是否是阳线"""
@@ -56,9 +58,14 @@ class K:
     def ratioAbs(self):
         """变化率绝对值"""
         return abs(self.ratio())
+    def isUS(self):
+        """是否涨停"""
+        return self.pct_chg>9.85
+    def isDS(self):
+        """是否跌停"""
+        return self.pct_chg<-9.85
 
     def __repr__(self):
-        return '{date='+str(self.date)+',open='+str(self.open)+',close='+str(self.close)+\
-               ',hight='+str(self.high)+',low='+str(self.low)+',volume='+str(self.volume)+',code='\
-               +str(self.code)+',tor='+str(self.tor)+'}'
+        return "{date=%s,open=%s,close=%s,high=%s,low=%s,volume=%s,code=%s,tor=%s,pct_chg=%s}" \
+               % (self.date,self.open,self.close,self.high,self.low,self.volume,self.code,self.tor,self.pct_chg)
 

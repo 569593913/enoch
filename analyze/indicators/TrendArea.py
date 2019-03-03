@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from Trend import *
+from .Trend import *
 
 class Area:
     """

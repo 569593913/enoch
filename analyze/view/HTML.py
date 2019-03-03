@@ -12,7 +12,7 @@ def show(fileName,params={}):
     with open(package_directory+'/html/' + fileName) as htmlFile:
         html = htmlFile.read()
     #替换参数
-    for key, value in params.iteritems():
+    for key, value in params.items():
         html = html.replace("_"+str(key)+"_",str(value))
     display(HTML(html))
     return html

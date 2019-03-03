@@ -59,7 +59,7 @@
                     var earn = typeof this.points[2] =='undefined'?'-':this.points[2].point.y.toFixed(4);
                     var maEarn = typeof this.points[3] =='undefined'?'-':this.points[3].point.y.toFixed(4);
                     var rEarn = typeof this.points[4] =='undefined'?'-':this.points[4].point.y.toFixed(4);
-                    return '<b>' + Highcharts.dateFormat('%Y-%m-%d',this.x) +'</b>'
+                    return '<b>' + Highcharts.dateFormat('%Y-%m-%d',this.x+1000*24*60*60) +'</b>'
                     +'<br>'+'<b>'+'code: '+'</b>' + this.points[0].series.name
                     +'<br>'+'<b>'+'open: '+'</b>' + open
                     +'<br>'+'<b>'+'close: '+'</b>' + close
@@ -135,7 +135,7 @@
                 },{
                     name: 'trendMergeLine',
                     data: _trendMergeLine_,
-                    visible: true,
+                    visible: false,
                     lineWidth: 2,
                     step: false,
                     color: '#6e83eb',
@@ -164,7 +164,7 @@
                 },{
                     name: "MA20",
                     lineWidth: 1,
-                    visible: false,
+//                    visible: false,
                     data: _line20_,
 //                    color: '#cc6bdb',
                     color: '#ec717f',

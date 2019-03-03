@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from Base import *
+from .Base import *
 class StrategyS1(Base):
     """
 

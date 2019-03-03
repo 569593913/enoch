@@ -26,14 +26,14 @@ class BuyBS:
         if (
             lm1.isUp() and lm2.day > 2 and lm3.day > 3 and lm1.day < 3
             and (
-                  ( (lm2.low - lm3.low)/lm3.low < 0.01 and lm2 > lm3.low ) or
+                  ( (lm2.low - lm3.low)/lm3.low < 0.01 and lm2.low > lm3.low ) or
                   ((k.minOC()-lm3.low)/lm3.low < 0.01 and k.minOC() > lm3.low)
                 )
         ):
             # /\,
             return ConditionBean('bs', k, 'sb')
         if (
-            (lm1.isDown() and lm1.day > 3 and lm2.day > 3 and (lm1.low - lm3.high)/lm3.high < 0.01 and lm1 > lm3.high)
+            (lm1.isDown() and lm1.day > 3 and lm2.day > 3 and (lm1.low - lm3.high)/lm3.high < 0.01 and lm1.high > lm3.high)
             or (ls1.isDown() and ls1.day > 3 and ls2.day > 3 and abs(ls1.low - ls3.high)/ls3.high < 0.01 )
         ):
             #   /\
@@ -42,7 +42,7 @@ class BuyBS:
         if (
             lm1.isUp() and lm2.day > 2 and lm4.day > 3 and lm1.day < 3
             and (
-                  ( (lm2.low - lm4.high)/lm4.high < 0.01 and lm2 > lm4.high ) or
+                  ( (lm2.low - lm4.high)/lm4.high < 0.01 and lm2.high > lm4.high ) or
                   ((k.minOC()-lm4.high)/lm4.high < 0.01 and k.minOC() > lm4.high)
                 )
         ):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from Trader import *
+from .Trader import *
 import  data.KDataDao as kd
 class Simulator:
     """
@@ -69,7 +69,7 @@ class Simulator:
         if None==list:
             list = kd.get_k_data(code,begin,end)
         if len(list)<1:
-            print '%s begin:%s,end:%s 没有测试数据' % (code,begin,end)
+            print('%s begin:%s,end:%s 没有测试数据' % (code,begin,end))
             return
         i = 0
         while i<len(list):
@@ -102,7 +102,7 @@ class Simulator:
             # 获取股票数据
             list = kd.get_k_data(code, begin, end)
             if len(list) < 1:
-                print '%s begin:%s,end:%s 没有测试数据' % (code, begin, end)
+                print('%s begin:%s,end:%s 没有测试数据' % (code, begin, end))
                 continue
             i = 0
             while i < len(list):

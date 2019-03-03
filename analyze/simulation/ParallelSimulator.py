@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from Trader import *
+from .Trader import *
 import  data.KDataDao as kd
 import operator
-import thread
+# import thread
 import copy
 from threading import Thread,Lock
 import time
@@ -74,7 +74,7 @@ class ParallelSimulator:
                     dic[k.code] = k.close
             self.trader.fresh(listK[0].date,dic)
             date = date + timedelta(days=1)
-            print "%s" % (date.strftime("%Y-%m-%d"))
+            print("%s" % (date.strftime("%Y-%m-%d")))
 
     def getOdds(self):
         """获取胜率"""

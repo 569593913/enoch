@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from Trader import *
+from .Trader import *
 import  data.KDataDao as kd
 class SimulatorS:
     """
@@ -68,13 +68,13 @@ class SimulatorS:
         if None==list:
             list = kd.get_k_data(code,begin,end)
         if len(list)<1:
-            print '%s begin:%s,end:%s 没有测试数据' % (code,begin,end)
+            print('%s begin:%s,end:%s 没有测试数据' % (code,begin,end))
             return
         sequenceStrategy.init(self.trader)
         for k in list:
             sequenceStrategy.decide(k)
             self.trader.fresh(k.date, {code: k.close})
-            # print "%s" % (datetime.fromtimestamp(k.date / 1000.0 - 24 * 60 * 60))
+            # print("%s" % (datetime.fromtimestamp(k.date / 1000.0 - 24 * 60 * 60)))
 
 
     def runSequence(self,market=None,sequenceStrategy=None,begin=None,end=None):
@@ -101,7 +101,7 @@ class SimulatorS:
             # 获取股票数据
             list = kd.get_k_data(code, begin, end)
             if len(list) < 1:
-                print '%s begin:%s,end:%s 没有测试数据' % (code, begin, end)
+                print('%s begin:%s,end:%s 没有测试数据' % (code, begin, end))
                 continue
             i = 0
             while i < len(list):

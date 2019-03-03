@@ -7,29 +7,82 @@
 <script src="/files/analyze/view/js/highcharts.js"></script>
 <script type="text/javascript">
 
-    // create the chart
-    var chart = Highcharts.highcharts('container', {
-            legend: {
-                enabled: true
-            },
-            chart: {
-                height: '680px',
-            },
-            title: {
-                text: 'strategy'
-             },
-            series: [
-                {
-                    name: "_name_",
-                    yAxis: 0,
-                    lineWidth: 2,
-                    data: _colum_,
-                    color: '#6e83eb',
-                    step: false,
-                    connectNulls: false,
-                }
-            ]
-    });
+
+// Create the chart
+Highcharts.chart('container', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: '_name_'
+    },
+//    subtitle: {
+//        text: 'Click the columns to view versions. Source: <a href="http://statcounter.com" target="_blank">statcounter.com</a>'
+//    },
+    xAxis: {
+        type: 'category'
+    },
+    yAxis: {
+        title: {
+            text: 'Total percent market share'
+        }
+
+    },
+    legend: {
+        enabled:true
+    },
+    plotOptions: {
+        series: {
+            borderWidth: 0,
+            dataLabels: {
+                enabled: true,
+                format: '{point.y:.0f}'
+            }
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.0f}</b> <br/>'
+    },
+
+    "series": [
+        {
+            "name": "涨跌",
+            "colorByPoint": true,
+            "data":_data_
+//            "data": [
+//                {
+//                    "name": "上涨",
+//                    "x": 0,
+//                    "y": 1000
+//                },
+//                {
+//                    "name": "下跌",
+//                    "x": 1,
+//                    "y": 2000
+//                }
+//            ]
+//        },
+//        {
+//            "name": "涨跌停",
+//            "colorByPoint": true,
+//            "data": [
+//                {
+//                    "name": "涨停",
+//                    "x": 4,
+//                    "y": 50
+//                },
+//                {
+//                    "name": "跌涨",
+//                    "x": 5,
+//                    "y": 100
+//                }
+//            ]
+        }
+    ]
+
+});
 </script>
 </head>
 <body>

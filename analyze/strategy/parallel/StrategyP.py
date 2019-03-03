@@ -36,7 +36,7 @@ class StrategyP:
                 for sell in self.sells:
                     sellCondition = sell.decide(kl,condition,self.trendAreas[k.code])
                     if sellCondition != None:
-                        print "s>>>>>%s,%s" % (k.code,sellCondition)
+                        print("s>>>>>%s,%s" % (k.code,sellCondition))
                         self.trader.sell(k.code,k.date,k.close,condition=sellCondition)
                         self.dicCondition[k.code] = None
             else:

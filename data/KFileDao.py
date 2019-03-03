@@ -22,12 +22,12 @@ def updateFromFile(dir,fileName,db):
                 continue
             cursor.execute(sql % (ds[0].strip(),code,ds[1].strip(),ds[2].strip(),ds[3].strip(),ds[4].strip(),ds[5].strip(),ds[6].strip()))
             db.commit()
-    print "file %s complete" % fileName
+    print("file %s complete" % fileName)
     cursor.close()
 
 def updateFromFiles(dir,threadCount):
     files = os.listdir(dir)
-    print len(files)
+    print(len(files))
     tds = []
     for i in range(threadCount):
         t = UpdateThread(files,dir)
@@ -38,7 +38,7 @@ def updateFromFiles(dir,threadCount):
     failure = []
     for t in tds:
         failure.append(t.failure)
-    print "failure:" + str(failure)
+    print("failure:" + str(failure))
 
 
 class UpdateThread (threading.Thread):

@@ -1,40 +1,42 @@
 # -*- coding: utf-8 -*-
 import sys
 sys.path.append("../")
-import data.KDataDao as kd
+import data.StockDao as sd
 from IPython.display import display,clear_output,HTML
 import ipywidgets as widgets
 
 class Selector():
     """股票工具类"""
 
-    def __init__(self,select=True):
+    def __init__(self,select=True,begin="20180101",end=None):
         self.idx = 0
         self.codes = []
+        self.begin = begin
+        self.end = end
         if select:
             self.select()
         else:
-            self.codes = kd.get_stock_codes()
+            self.codes = sd.get_stock_codes()
         if len(self.codes) < 1:
-            print "no stock find!"
+            print("no stock find!")
         else:
             self.firgueButton()
 
     def select(self):
         """筛选股票"""
-        print "selecting......"
-        codes = kd.get_stock_codes()
+        print("selecting......")
+        codes = sd.get_stock_codes()
         for code in codes:
-            list = kd.get_k_data(code, "2016-01-01")
+            list = sd.get_k_data(code, self.begin, self.end)
             if len(list) < 3:
                 continue
             if self.analyze(list)==True:
                 self.codes.append(code)
-        print "complete slecet!"
+        print("complete select!")
 
     def analyze(self,list):
         """分析股票"""
-        print "analyze需要子类继承"
+        print("analyze需要子类继承")
 
 
     def figurePre(self):
@@ -59,7 +61,7 @@ class Selector():
         self.firgue(self.codes[self.idx])
     def firgue(self,code):
         """显示股票,需要子类继承"""
-        print "firgue需要子类继承"
+        print("firgue需要子类继承")
 
     def firgueButton(self):
         """画选按键"""

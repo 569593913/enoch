@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import create_engine
-import tushare as ts
 import KDataDao as kd
 import threading
 from K import *
@@ -9,6 +8,11 @@ from Log import *
 import LogDao as logDao
 from datetime import datetime, timedelta
 from DBConfig import *
+import tushare as ts
+ts.set_token('64579ca6c4c7b19130eb58f8b5781841d9aceda9ba7a48356ad58060')
+pro = ts.pro_api()
+engine = create_engine('mysql://%s:%s@%s/%s?charset=utf8' % (user, password, address, schema),encoding='utf-8')
+
 
 
 def update_k_data(code,start,end=None):
@@ -20,9 +24,8 @@ def update_k_data(code,start,end=None):
     else:
         df = ts.get_k_data(code,autype='hfq',  start=start, end=end,retry_count=3)
     kd.del_k_data(start=start, end=end,code=code)
-    engine = create_engine('mysql://%s:%s@%s/%s' % (user, password, address, schema))
     df.to_sql('k_data', engine, if_exists='append', index=False)
-    print "%s complete %s~%s use:%ss" % (code,start,end,time.time()-begin)
+    print("%s complete %s~%s use:%ss" % (code,start,end,time.time()-begin))
 
 def update_k_day_af_t(cons,code,start,end=None):
     """
@@ -43,7 +46,7 @@ def update_k_day_af_t(cons,code,start,end=None):
         list.append(k)
     beginInsert = time.time()
     kd.update_k_day_af_t(list)
-    print "%s complete start=%s end=%s total=%ss insert=%ss" % (code,start,end,(time.time()-begin),(time.time()-beginInsert))
+    print("%s complete start=%s end=%s total=%ss insert=%ss" % (code,start,end,(time.time()-begin),(time.time()-beginInsert)))
 
 def update_today_all():
     """更新今天所有数据"""
@@ -61,7 +64,7 @@ def update_today_all():
         k.volume=df.volume[i]
         kd.update_k(k)
         i+=1
-        print k.code+"complete>>>"+str(i)
+        print(k.code+"complete>>>"+str(i))
 
 class KDataUpdateThread (threading.Thread):
     queueLock = threading.Lock()
@@ -131,7 +134,7 @@ def update_period_k_data(begin=None,end=None,market=None,threadCount=3):
     failure = []
     for t in tds:
         failure.append(t.failure)
-    print "failure:"+str(failure)
+    print("failure:"+str(failure))
 
 def update_k_year(byear,eyear,threadCount=3,market=None,log=True):
     """
@@ -161,15 +164,17 @@ def update_k_year(byear,eyear,threadCount=3,market=None,log=True):
             t.join()
         for t in tds:
             failure.append(t.failure)
-        print "%s %s~%s complete!" % (market,begin,end)
+        print("%s %s~%s complete!" % (market,begin,end))
         year -= 1
-    print "failure:%s %s" % (len(failure),str(failure))
+    print("failure:%s %s" % (len(failure),str(failure)))
 
 
 # begin = time.time()
 # df = ts.bar("000002",conn=ts.get_apis(),freq="1min", start_date='2017-01-02',end_date='2017-01-03',factors=['vr','tor'],retry_count=10)
 # print df
 # print 'complete %s second' %  (time.time()-begin)
-update_k_year(1990,2017,3,'sza',True);
-update_k_year(1990,2017,3,'sha',True);
+# update_k_year(1990,2018,5,'sza',True);
+# update_k_year(1990,2018,5,'sha',True);
 # update_period_k_data()
+# update_k_data('601218',start='2018-01-26')
+# print ts.get_k_data('601218',autype='hfq', start='2018-01-26',retry_count=3)

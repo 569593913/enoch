@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from HoldStock import *
-from TradeRecord import *
+from .HoldStock import *
+from .TradeRecord import *
 import threading
 from datetime import *
 class Trader:
@@ -38,7 +38,7 @@ class Trader:
         """
         with self.lock:
             if buyPrice <= 0:
-                print "buyPrice=0 return"
+                print("buyPrice=0 return")
                 return
             #获取可买的金额
             if buyAmount == None or buyAmount > self.cash:
@@ -55,8 +55,8 @@ class Trader:
             #可买到的数量
             canBuyQuantity = afterTaxAmount / buyPrice
             if canBuyQuantity < 100:
-                # print 'buy code:%s quantity:%s less 100,price:%s,cash:%s,original:%s,isHold:%s' \
-                #       % (code,quantity,buyPrice,self.cash,self.original,self.isHold(code))
+                # print('buy code:%s quantity:%s less 100,price:%s,cash:%s,original:%s,isHold:%s' \
+                #       % (code,quantity,buyPrice,self.cash,self.original,self.isHold(code)))
                 return
             holdStock = HoldStock(code, buyTime, buyPrice, buyPrice, canBuyQuantity)
             if code not in self.own:
@@ -82,17 +82,17 @@ class Trader:
         """
         with self.lock:
             if self.isHold(code) == False:
-                # print "%s 没有持有,不可卖!" % code
+                # print("%s 没有持有,不可卖!" % code)
                 return
             if sellPrice <= 0:
-                print 'price:%s' % sellPrice
+                print('price:%s' % sellPrice)
                 return
             if None == quantity:
                 quantity = 0
                 for hs in self.own[code]:
                     quantity += hs.quantity
             if quantity < 100:
-                print 'sell quantity:% less 100' % quantity
+                print('sell quantity:% less 100' % quantity)
                 return
             # 获取可卖出的数量
             actualSellQuantity = 0
@@ -141,7 +141,7 @@ class Trader:
         :return:
         """
         with self.lock:
-            for code, price in dic.iteritems():
+            for code, price in dic.items():
                 for hs in self.own.get(code, []):
                     hs.currentPice = price
         self.earningsLine.append([date,self.earnings()])
